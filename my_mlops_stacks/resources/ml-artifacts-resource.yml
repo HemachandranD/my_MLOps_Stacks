@@ -1,0 +1,24 @@
+# Allow users to read the experiment and the model
+common_permissions: &permissions
+  permissions:
+    - level: CAN_READ
+      group_name: users
+
+
+
+# Defines model and experiments
+resources:
+  models:
+    model:
+      name: ${var.model_name}
+      description: MLflow registered model for the "my_mlops_stacks" ML Project for ${bundle.target} deployment target.
+      <<: *permissions
+      depends_on:
+        - resources.jobs.model_training_job.id
+        - resources.jobs.batch_inference_job.id
+
+  experiments:
+    experiment:
+      name: ${var.experiment_name}
+      <<: *permissions
+      description: MLflow Experiment used to track runs for my_mlops_stacks project.

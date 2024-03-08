@@ -1,0 +1,12 @@
+{
+  "input_root_dir": "my_mlops_stacks",
+  "input_cloud": "azure",
+  "input_cicd_platform": "azure_devops",
+  "input_default_branch": "main_mlops_stack",
+  "input_release_branch": "release_mlops_stack",
+  "cloud_specific_node_type_id": "v0.212.2",
+  "input_cli_version": "v0.212.2",
+  "test_catalog_name": "test",
+  "staging_catalog_name": "staging",
+  "prod_catalog_name": "prod"
+}
