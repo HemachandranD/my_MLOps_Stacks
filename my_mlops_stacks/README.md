@@ -65,8 +65,6 @@ my_mlops_stacks        <- Root directory. Both monorepo and polyrepo are support
 │       ├── feature-engineering-workflow-resource.yml  <- ML resource config definition for feature engineering workflow
 │       │
 │       ├── ml-artifacts-resource.yml                  <- ML resource config definition for model and experiment
-│       │
-│       ├── monitoring-workflow-resource.yml           <- ML resource config definition for data monitoring workflow
 ```
 
 

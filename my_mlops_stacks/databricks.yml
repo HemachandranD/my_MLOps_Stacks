@@ -9,6 +9,8 @@ variables:
   model_name:
     description: Model name for the model training.
     default: ${bundle.target}-my_mlops_stacks-model
+  cluster_id:
+    description: Cluster id for compute.
 
 include:
   # Resources folder contains ML artifact resources for the ML project that defines model and experiment
@@ -20,6 +22,8 @@ include:
 targets:
   dev: 
     default: true
+    variables:
+      cluster_id: 
     workspace:
       # TODO: add dev workspace URL
       host:
@@ -27,14 +31,20 @@ targets:
 
 
   staging:
+    variables:
+        cluster_id: 
     workspace:
       host: https://adb-xxxx.xx.azuredatabricks.net
 
   prod:
+    variables:
+      cluster_id:
     workspace:
       host: https://adb-xxxx.xx.azuredatabricks.net
 
   test:
+    variables:
+      cluster_id:
     workspace:
       host: https://adb-xxxx.xx.azuredatabricks.net
 
