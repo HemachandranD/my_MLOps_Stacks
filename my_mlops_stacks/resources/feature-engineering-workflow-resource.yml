@@ -35,6 +35,7 @@ resources:
               primary_keys: zip
               # git source information of current ML resource deployment. It will be persisted as part of the workflow run
               git_source_info: url:${bundle.git.origin_url}; branch:${bundle.git.branch}; commit:${bundle.git.commit}
+              existing_cluster_id: ${var.cluster_id}
         - task_key: DropoffFeatures
           job_cluster_key: write_feature_table_job_cluster
           notebook_task:
@@ -51,9 +52,10 @@ resources:
               primary_keys: zip
               # git source information of current ML resource deployment. It will be persisted as part of the workflow run
               git_source_info: url:${bundle.git.origin_url}; branch:${bundle.git.branch}; commit:${bundle.git.commit}
-      schedule:
-        quartz_cron_expression: "0 0 7 * * ?" # daily at 7am
-        timezone_id: UTC
+              existing_cluster_id: ${var.cluster_id}
+      # schedule:
+      #   quartz_cron_expression: "0 0 7 * * ?" # daily at 7am
+      #   timezone_id: UTC
       <<: *permissions
       # If you want to turn on notifications for this job, please uncomment the below code,
       # and provide a list of emails to the on_failure argument.

@@ -1,10 +1,10 @@
-new_cluster: &new_cluster
-  new_cluster:
-    num_workers: 3
-    spark_version: 13.3.x-cpu-ml-scala2.12
-    node_type_id: Standard_D3_v2
-    custom_tags:
-      clusterSource: mlops-stacks_0.3
+# new_cluster: &new_cluster
+#   new_cluster:
+#     num_workers: 3
+#     spark_version: 13.3.x-cpu-ml-scala2.12
+#     node_type_id: Standard_D3_v2
+#     custom_tags:
+#       clusterSource: mlops-stacks_0.3
 
 common_permissions: &permissions
   permissions:
@@ -15,12 +15,12 @@ resources:
   jobs:
     model_training_job:
       name: ${bundle.target}-my_mlops_stacks-model-training-job
-      job_clusters:
-        - job_cluster_key: model_training_job_cluster
-          <<: *new_cluster
+      # job_clusters:
+      #   - job_cluster_key: model_training_job_cluster
+      #     <<: *new_cluster
       tasks:
         - task_key: Train
-          job_cluster_key: model_training_job_cluster
+          # job_cluster_key: model_training_job_cluster
           notebook_task:
             notebook_path: ../training/notebooks/TrainWithFeatureStore.py
             base_parameters:
@@ -33,8 +33,9 @@ resources:
               dropoff_features_table: feature_store_taxi_example.${bundle.target}_my_mlops_stacks_trip_dropoff_features
               # git source information of current ML resource deployment. It will be persisted as part of the workflow run
               git_source_info: url:${bundle.git.origin_url}; branch:${bundle.git.branch}; commit:${bundle.git.commit}
+          existing_cluster_id: ${var.cluster_id}
         - task_key: ModelValidation
-          job_cluster_key: model_training_job_cluster
+          # job_cluster_key: model_training_job_cluster
           depends_on:
             - task_key: Train
           notebook_task:
@@ -76,8 +77,9 @@ resources:
               evaluator_config_loader_function: evaluator_config
               # git source information of current ML resource deployment. It will be persisted as part of the workflow run
               git_source_info: url:${bundle.git.origin_url}; branch:${bundle.git.branch}; commit:${bundle.git.commit}
+          existing_cluster_id: ${var.cluster_id}
         - task_key: ModelDeployment
-          job_cluster_key: model_training_job_cluster
+          # job_cluster_key: model_training_job_cluster
           depends_on:
             - task_key: ModelValidation
           notebook_task:
@@ -86,9 +88,21 @@ resources:
               env: ${bundle.target}
               # git source information of current ML resource deployment. It will be persisted as part of the workflow run
               git_source_info: url:${bundle.git.origin_url}; branch:${bundle.git.branch}; commit:${bundle.git.commit}
-      schedule:
-        quartz_cron_expression: "0 0 9 * * ?" # daily at 9am
-        timezone_id: UTC
+          existing_cluster_id: ${var.cluster_id}
+        - task_key: ModelServing
+          # job_cluster_key: model_training_job_cluster
+          depends_on:
+            - task_key: ModelDeployment
+          notebook_task:
+            notebook_path: ../deployment/model_serving/notebooks/ModelServing.py
+            base_parameters:
+              env: ${bundle.target}
+              # git source information of current ML resource deployment. It will be persisted as part of the workflow run
+              git_source_info: url:${bundle.git.origin_url}; branch:${bundle.git.branch}; commit:${bundle.git.commit}
+          existing_cluster_id: ${var.cluster_id}
+      # schedule:
+      #   quartz_cron_expression: "0 0 9 * * ?" # daily at 9am
+      #   timezone_id: UTC
       <<: *permissions
       # If you want to turn on notifications for this job, please uncomment the below code,
       # and provide a list of emails to the on_failure argument.
