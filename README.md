@@ -8,8 +8,6 @@ The "Getting Started" docs can be found at https://learn.microsoft.com/azure/dat
 See the full pipeline structure below. The [MLOps Stacks README](https://github.com/databricks/mlops-stacks/blob/main/Pipeline.md)
 contains additional details on how ML pipelines are tested and deployed across each of the dev, staging, prod environments below.
 
-![MLOps Stacks diagram](docs/images/mlops-stack-summary.png)
-
 
 ## Code structure
 This project contains the following components:
